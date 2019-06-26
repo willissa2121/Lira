@@ -6,15 +6,14 @@ let fs = require("fs")
 let moment = require('moment');
 moment().format();
 require('dotenv').config()
+var keys = require("./modules.js")
+
+var spotify = new Spotify(keys.spotify)
 
 
 
 
 
-var spotify = new Spotify({
-  id: process.env.S_ID,
-  secret: process.env.S_SECRET
-});
 
 
 
@@ -99,7 +98,7 @@ let spotifyFunc = () => {
         console.log("The Writers of this song are " + emptyA)
       }
       else {
-        console.log("The writer of this song is " + data.tracks.items[0].artists[0])
+        console.log("The writer of this song is " + data.tracks.items[0].artists[0].name)
       }
       console.log("The Name of the song is " + response.song);
       console.log("The link for this song is " + data.tracks.items[0].album.external_urls.spotify);
