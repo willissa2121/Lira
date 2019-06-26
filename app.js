@@ -1,13 +1,10 @@
+//ALL NPM PACKAGES
 let axios = require("axios")
 let inquirer = require("inquirer");
 var Spotify = require('node-spotify-api');
 let fs = require("fs")
-
-var moment = require('moment');
+let moment = require('moment');
 moment().format();
-
-
-
 require('dotenv').config()
 
 
@@ -15,8 +12,8 @@ require('dotenv').config()
 
 
 var spotify = new Spotify({
-  id: "b57d5d89a4124b389c0651d768db5d0c",
-  secret: "f012266b908b49a580d38097e1c3dd4b"
+  id: process.env.S_ID,
+  secret: process.env.S_SECRET
 });
 
 
@@ -131,7 +128,7 @@ let eventFunc = () => {
 
 
 
-    let eventURL = "https://rest.bandsintown.com/artists/" + response.artist + "/events?app_id=9c673c07-eb63-4998-b172-0fb87bbf3b01&date=upcoming"
+    let eventURL = "https://rest.bandsintown.com/artists/" + response.artist + "/events?app_id=" + process.env.EVENT_KEY +"&date=upcoming"
 
     axios.get(eventURL).then(function (response) {
       let base = response.data[0];
