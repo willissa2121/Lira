@@ -4,11 +4,12 @@ let inquirer = require("inquirer");
 var Spotify = require('node-spotify-api');
 let fs = require("fs")
 let moment = require('moment');
+let nodemailer = require("nodemailer");
 moment().format();
 require('dotenv').config()
 var keys = require("./modules.js")
 
-var spotify = new Spotify(keys.spotify)
+var spotify = new Spotify(keys.spotify);
 
 
 
@@ -22,7 +23,7 @@ let main = {
   type: "list",
   message: "choose an action",
   name: "mainList",
-  choices: ["Movie Search", "Spotify Song Search", "Event Search", "Random Call"]
+  choices: ["Movie Search", "Spotify Song Search", "Event Search", "Random Call", "Send an Email"]
 }
 inquirer.prompt([
   main
@@ -36,8 +37,11 @@ inquirer.prompt([
   else if (response.mainList == main.choices[2]) {
     eventFunc()
   }
-  else {
+  else if (response.mainList == main.choices[3]) {
     randoFunc()
+  }
+  else {
+    emailFunc()
   }
 })
 
@@ -127,7 +131,7 @@ let eventFunc = () => {
 
 
 
-    let eventURL = "https://rest.bandsintown.com/artists/" + response.artist + "/events?app_id=" + process.env.EVENT_KEY +"&date=upcoming"
+    let eventURL = "https://rest.bandsintown.com/artists/" + response.artist + "/events?app_id=" + process.env.EVENT_KEY + "&date=upcoming"
 
     axios.get(eventURL).then(function (response) {
       let base = response.data[0];
@@ -160,6 +164,63 @@ let randoFunc = () => {
     })
   })
 
+}
+
+
+//function to send email if its called
+
+let emailFunc = () => {
+  let message = {
+    type: "input",
+    message: "Please enter a message to send via email",
+    name: "message"
+  }
+
+  let email = {
+    type: "input",
+    message: "Please enter the recieving email address",
+    name: "email"
+  }
+
+
+  inquirer.prompt([
+    {
+      type: "input",
+      message: "Please enter a message to send via email",
+      name: "message"
+    }
+    ,
+    {
+      type: "input",
+      message: "Please enter the recieving email address",
+      name: "email"
+    }
+  ]).then(function (response) {
+
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.G_USER,
+        pass: process.env.G_PASS
+      }
+    });
+
+    var mailOptions = {
+      from: 'testwillissa@gmail.com',
+      to: response.email,
+      subject: 'Sending Email using Node.js',
+      text: response.message
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    })
+
+  })
 }
 
 let errMovie = () => {
