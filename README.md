@@ -19,10 +19,9 @@
 
 
 
-It's much simpler than that.
-Just upload your image to the repository root, and link to the filename without any path, like so:
 
-![Screenshot]("/images/Screenshot(20).png")
+
+![GitHub Logo](/images/Screenshot(26).png)
 
 
 
